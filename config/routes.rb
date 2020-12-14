@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   root to: "prototypes#index"
   resources :prototypes, only: :index
   resources :prototypes, only: :new
+  resources :prototypes, only: :show
   resources :prototypes do
     resources :comments, only: :create
     collection do
