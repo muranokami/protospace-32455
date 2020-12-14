@@ -6,6 +6,5 @@ Rails.application.routes.draw do
     collection do
     end
   end
-  resources :users, onry: :show
 end
  
