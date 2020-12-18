@@ -1,51 +1,52 @@
 class PrototypesController < ApplicationController
-  before_action :set_prototype, except: [:index, :new, :create]
-  before_action :authenticate_user!, except: [:index, :show]
-  before_action :contributor_confirmation, only: [:edit, :update, :destroy]
-
+  before_action :authenticate_user!, except:[:show, :index]
+  before_action :set_prototype, only:[:edit, :show]
+  before_action :move_to_index, only: :edit
   def index
-    @prototypes = Prototype.includes(:user)
+    @prototypes = Prototype.all
   end
 
-  def new
+  def new 
     @prototype = Prototype.new
   end
 
-  def create
+  def create 
     @prototype = Prototype.new(prototype_params)
     if @prototype.save
       redirect_to root_path
-    else
+    else  
       render :new
     end
   end
 
-  def show
-    @comment = Comment.new
-    @comments = @prototype.comments
+  def destroy
+    prototype = Prototype.find(params[:id])
+    prototype.destroy
+    redirect_to root_path
   end
 
   def edit
+   @prototype = Prototype.find(params[:id])
   end
+
+  
 
   def update
-    if @prototype.update(prototype_params)
-      redirect_to prototype_path(@prototype)
-    else
-      render :edit
-    end
+    @prototype = Prototype.find(params[:id])
+      if @prototype.update(prototype_params)
+        redirect_to prototype_path(@prototype)
+      else
+        render :edit
+      end 
   end
 
-  def destroy
-    if @prototype.destroy
-      redirect_to root_path
-    else
-      redirect_to root_path
-    end
+  def show
+    @prototype = Prototype.find(params[:id])
+    @comment = Comment.new
+    @comments = @prototype.comments.includes(:user)
   end
 
   private
-
   def prototype_params
     params.require(:prototype).permit(:title, :catch_copy, :concept, :image).merge(user_id: current_user.id)
   end
@@ -54,7 +55,10 @@ class PrototypesController < ApplicationController
     @prototype = Prototype.find(params[:id])
   end
 
-  def contributor_confirmation
-    redirect_to root_path unless current_user == @prototype.user
-  end
+  def move_to_index
+    unless current_user.id == @prototype.user_id
+      redirect_to action: :index
+    end
+  end   
 end
+
