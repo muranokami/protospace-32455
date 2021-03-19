@@ -69,3 +69,5 @@ Things you may want to cover:
 
 - has_many :users
 - belongs_to :comments
+
+会話や、チャットを楽しくできるコミュニケーションツール
