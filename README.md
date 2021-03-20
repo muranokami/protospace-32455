@@ -71,3 +71,4 @@ Things you may want to cover:
 - belongs_to :comments
 
 会話や、チャットを楽しくできるコミュニケーションツール
+人と会話が多くなれば良いと思い作りました。
